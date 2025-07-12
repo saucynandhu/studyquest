@@ -42,95 +42,6 @@ A gamified study web app that transforms learning into an epic adventure! Comple
 - Level up every 100 XP
 - Bonus XP for streaks and achievements
 
-### Power-ups
-- **Focus Shield**: Blocks notifications for 25 minutes (Pomodoro)
-- **XP Boost**: Double XP for next 3 missions
-- **Time Freeze**: Extend deadline by 24 hours
-
-### Achievements
-- First Steps: Complete your first mission
-- Week Warrior: Maintain a 7-day streak
-- Scholar: Reach level 10
-- Knowledge Seeker: Earn 1000 XP
-
-## 📋 Getting Started
-
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-- Firebase project
-
-### Installation
-
-1. **Clone the repository**
-```bash
-git clone https://github.com/yourusername/studyquest.git
-cd studyquest
-```
-
-2. **Install dependencies**
-```bash
-npm install
-```
-
-3. **Set up Firebase**
-   - Create a Firebase project
-   - Enable Authentication and Firestore
-   - Add your Firebase config to `.env.local`:
-```env
-NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
-```
-
-4. **Run the development server**
-```bash
-npm run dev
-```
-
-5. **Open your browser**
-Navigate to [http://localhost:3000](http://localhost:3000)
-
-## 🎯 Usage
-
-### Creating Missions
-1. Click "New Mission" on the dashboard
-2. Fill in mission details:
-   - Title and subject
-   - Duration and deadline
-   - XP value
-3. Submit to create your quest
-
-### Using Power-ups
-1. Navigate to Power-ups section
-2. Select an available power-up
-3. Click "Activate" to use it
-4. Wait for cooldown to use again
-
-### Tracking Progress
-- View XP bar and level on dashboard
-- Check streak counter
-- Monitor active power-ups
-- Browse achievements
-
-## 🏗️ Project Structure
-
-```
-studyquest/
-├── src/
-│   ├── app/                 # Next.js app router
-│   ├── components/          # React components
-│   ├── lib/                 # Utilities and configs
-│   ├── store/              # Zustand state management
-│   └── types/              # TypeScript definitions
-├── public/                 # Static assets
-├── package.json
-└── README.md
-```
-
 ## 🎨 Customization
 
 ### Themes
@@ -148,19 +59,6 @@ studyquest/
 - Add unlock conditions
 - Create achievement UI components
 
-## 🚀 Deployment
-
-### Vercel (Recommended)
-1. Push to GitHub
-2. Connect to Vercel
-3. Add environment variables
-4. Deploy automatically
-
-### Other Platforms
-- Netlify
-- Firebase Hosting
-- AWS Amplify
-
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -169,15 +67,15 @@ studyquest/
 4. Add tests if applicable
 5. Submit a pull request
 
-## 📄 License
 
-MIT License - see [LICENSE](LICENSE) for details
 
 ## 🙏 Acknowledgments
 
 - Inspired by gamification principles
 - Built with modern web technologies
 - Designed for student productivity
+- CodeSpark Hackathon
+- Siddhant for Inspo
 
 ---
 
