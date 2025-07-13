@@ -35,6 +35,27 @@ A gamified study web app that transforms learning into an epic adventure! Comple
 - **Icons**: Lucide React
 - **PWA**: Service Worker, Manifest
 
+## 🔧 Environment Setup
+
+### Required Environment Variables
+
+Create a `.env.local` file in the root directory with your Firebase configuration:
+
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project_id.firebasestorage.app
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+```
+
+You can find these values in your Firebase Console > Project Settings > General > Your apps.
+
+### For Production (Vercel)
+
+Add these same environment variables in your Vercel project settings.
+
 ## 🎮 Gamification Elements
 
 ### XP System
