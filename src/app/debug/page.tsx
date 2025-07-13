@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useGameStore } from '@/store/gameStore';
-import { getUserProfile, getAllUsers, testFirebaseConnection, testFirestoreWrite } from '@/lib/firebase-utils';
+import { getUserProfile, getAllUsers, testFirebaseConnection, testFirestoreWrite, saveTimetableSessions, saveExams } from '@/lib/firebase-utils';
 import { User, Database, RefreshCw, Trash2, TestTube } from 'lucide-react';
 
 export default function DebugPage() {
@@ -124,6 +124,65 @@ export default function DebugPage() {
     } catch (error) {
       console.error('Firestore write test error:', error);
       alert('Firestore write test failed. Check console for details.');
+    }
+    setLoading(false);
+  };
+
+  const handleTestTimetableSave = async () => {
+    if (!user?.uid) {
+      alert('Please sign in first');
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const testSessions = [
+        {
+          id: 'test-1',
+          title: 'Test Session',
+          subject: 'Math',
+          startTime: '09:00',
+          endTime: '10:00',
+          day: 'Monday',
+          userId: user.uid
+        }
+      ];
+      
+      await saveTimetableSessions(user.uid, testSessions);
+      alert('Timetable save test completed! Check console for details.');
+    } catch (error) {
+      console.error('Timetable save test error:', error);
+      alert('Timetable save test failed. Check console for details.');
+    }
+    setLoading(false);
+  };
+
+  const handleTestExamSave = async () => {
+    if (!user?.uid) {
+      alert('Please sign in first');
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const testExams = [
+        {
+          id: 'test-exam-1',
+          title: 'Test Exam',
+          subject: 'Science',
+          examDate: '2024-12-25',
+          examTime: '14:00',
+          location: 'Room 101',
+          notes: 'Test exam notes',
+          createdAt: new Date().toISOString()
+        }
+      ];
+      
+      await saveExams(user.uid, testExams);
+      alert('Exam save test completed! Check console for details.');
+    } catch (error) {
+      console.error('Exam save test error:', error);
+      alert('Exam save test failed. Check console for details.');
     }
     setLoading(false);
   };
@@ -331,6 +390,22 @@ export default function DebugPage() {
               >
                 <TestTube className="w-4 h-4" />
                 Check Firebase Data
+              </button>
+              <button
+                onClick={handleTestTimetableSave}
+                disabled={loading || !user?.uid}
+                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white px-3 py-2 rounded text-sm"
+              >
+                <TestTube className="w-4 h-4" />
+                Test Timetable Save
+              </button>
+              <button
+                onClick={handleTestExamSave}
+                disabled={loading || !user?.uid}
+                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-600 text-white px-3 py-2 rounded text-sm"
+              >
+                <TestTube className="w-4 h-4" />
+                Test Exam Save
               </button>
 
             </div>

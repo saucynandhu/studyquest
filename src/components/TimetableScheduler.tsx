@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Plus, X, Edit2, Trash2 } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface TimetableSession {
   id: string;
@@ -20,6 +21,7 @@ const TIME_SLOTS = Array.from({ length: 24 }, (_, i) => `${i.toString().padStart
 
 export default function TimetableScheduler() {
   const { timetable, saveTimetableSessions } = useGameStore();
+  const { user } = useAuth();
   const [sessions, setSessions] = useState<TimetableSession[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingSession, setEditingSession] = useState<TimetableSession | null>(null);
@@ -42,7 +44,7 @@ export default function TimetableScheduler() {
     const newSession: TimetableSession = {
       ...session,
       id: Date.now().toString(),
-      userId: 'current-user' // This will be replaced with actual user ID
+      userId: user?.uid || 'unknown-user'
     };
     const updatedSessions = [...sessions, newSession];
     setSessions(updatedSessions);

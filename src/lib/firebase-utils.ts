@@ -291,28 +291,145 @@ export const isUsernameAvailable = async (username: string): Promise<boolean> =>
 // Save timetable sessions
 export const saveTimetableSessions = async (uid: string, sessions: TimetableSession[]) => {
   try {
+    console.log('=== SAVE TIMETABLE SESSIONS ===');
+    console.log('UID:', uid);
+    console.log('Sessions count:', sessions.length);
+    console.log('Firestore db:', !!db);
+    
     if (!db) {
-      console.error('Firestore not initialized');
+      console.error('❌ Firestore not initialized');
       return;
     }
     
+    console.log('✅ Firestore is initialized');
     const userRef = doc(db, 'users', uid);
-    await updateDoc(userRef, {
+    console.log('User document reference created');
+    
+    const updateData = {
       timetable: sessions,
       lastLoginDate: new Date().toISOString()
+    };
+    
+    console.log('About to save timetable data:', updateData);
+    await updateDoc(userRef, updateData);
+    console.log('✅ Timetable sessions saved successfully for UID:', uid);
+    
+    // Verify the save by reading back the data
+    console.log('Verifying timetable save...');
+    const verifySnap = await getDoc(userRef);
+    if (verifySnap.exists()) {
+      const verifyData = verifySnap.data();
+      console.log('✅ Timetable verification successful - sessions in Firebase:', verifyData.timetable?.length || 0);
+    } else {
+      console.log('❌ Timetable verification failed - document not found');
+    }
+  } catch (error: any) {
+    console.error('❌ Error saving timetable sessions:', error);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      stack: error.stack
     });
-  } catch (error) {
-    console.error('Error saving timetable sessions:', error);
   }
 };
 
 // Get timetable sessions
 export const getTimetableSessions = async (uid: string): Promise<TimetableSession[]> => {
   try {
+    console.log('=== GET TIMETABLE SESSIONS ===');
+    console.log('UID:', uid);
+    console.log('Firestore db:', !!db);
+    
+    if (!db) {
+      console.error('❌ Firestore not initialized');
+      return [];
+    }
+    
+    console.log('✅ Firestore is initialized');
     const userProfile = await getUserProfile(uid);
-    return userProfile?.timetable || [];
-  } catch (error) {
-    console.error('Error getting timetable sessions:', error);
+    const sessions = userProfile?.timetable || [];
+    console.log('✅ Retrieved', sessions.length, 'timetable sessions for UID:', uid);
+    return sessions;
+  } catch (error: any) {
+    console.error('❌ Error getting timetable sessions:', error);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      stack: error.stack
+    });
+    return [];
+  }
+};
+
+// Save exams
+export const saveExams = async (uid: string, exams: any[]) => {
+  try {
+    console.log('=== SAVE EXAMS ===');
+    console.log('UID:', uid);
+    console.log('Exams count:', exams.length);
+    console.log('Firestore db:', !!db);
+    
+    if (!db) {
+      console.error('❌ Firestore not initialized');
+      return;
+    }
+    
+    console.log('✅ Firestore is initialized');
+    const userRef = doc(db, 'users', uid);
+    console.log('User document reference created');
+    
+    const updateData = {
+      exams: exams,
+      lastLoginDate: new Date().toISOString()
+    };
+    
+    console.log('About to save exams data:', updateData);
+    await updateDoc(userRef, updateData);
+    console.log('✅ Exams saved successfully for UID:', uid);
+    
+    // Verify the save by reading back the data
+    console.log('Verifying exams save...');
+    const verifySnap = await getDoc(userRef);
+    if (verifySnap.exists()) {
+      const verifyData = verifySnap.data();
+      console.log('✅ Exams verification successful - exams in Firebase:', verifyData.exams?.length || 0);
+    } else {
+      console.log('❌ Exams verification failed - document not found');
+    }
+  } catch (error: any) {
+    console.error('❌ Error saving exams:', error);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      stack: error.stack
+    });
+  }
+};
+
+// Get exams
+export const getExams = async (uid: string): Promise<any[]> => {
+  try {
+    console.log('=== GET EXAMS ===');
+    console.log('UID:', uid);
+    console.log('Firestore db:', !!db);
+    
+    if (!db) {
+      console.error('❌ Firestore not initialized');
+      return [];
+    }
+    
+    console.log('✅ Firestore is initialized');
+    const userProfile = await getUserProfile(uid);
+    const exams = userProfile?.exams || [];
+    console.log('✅ Retrieved', exams.length, 'exams for UID:', uid);
+    return exams;
+  } catch (error: any) {
+    console.error('❌ Error getting exams:', error);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      stack: error.stack
+    });
     return [];
   }
 };

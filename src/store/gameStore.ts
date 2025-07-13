@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { PowerUp, Achievement } from '@/types';
-import { getUserProfile, updateUserProfile } from '@/lib/firebase-utils';
+import { getUserProfile, updateUserProfile, saveTimetableSessions as saveTimetableToFirebase, saveExams as saveExamsToFirebase } from '@/lib/firebase-utils';
 
 interface Mission {
   id: string;
@@ -329,26 +329,38 @@ export const useGameStore = create<GameState>()((set, get) => ({
     }
   },
   addExam: (exam) => {
-    const { exams } = get();
+    const { exams, userId } = get();
     const newExam: Exam = {
       ...exam,
       id: Date.now().toString(),
       createdAt: new Date().toISOString()
     };
     console.log('📚 Adding exam:', newExam);
-    set({ exams: [...exams, newExam] });
+    const updatedExams = [...exams, newExam];
+    set({ exams: updatedExams });
+    
+    // Save to Firebase immediately
+    if (userId) {
+      saveExamsToFirebase(userId, updatedExams);
+    }
     get().saveUserData();
   },
   deleteExam: (examId) => {
-    const { exams } = get();
-    set({ exams: exams.filter(exam => exam.id !== examId) });
+    const { exams, userId } = get();
+    const updatedExams = exams.filter(exam => exam.id !== examId);
+    set({ exams: updatedExams });
+    
+    // Save to Firebase immediately
+    if (userId) {
+      saveExamsToFirebase(userId, updatedExams);
+    }
     get().saveUserData();
   },
   saveTimetableSessions: async (sessions) => {
     console.log('📅 Saving timetable sessions to store:', sessions);
     set({ timetable: sessions });
     console.log('💾 Calling saveUserData for timetable...');
-    await get().saveUserData();
+    await saveTimetableToFirebase(get().userId!, sessions);
     console.log('✅ Timetable sessions saved to Firebase');
   },
   loadUserData: async (userId) => {
