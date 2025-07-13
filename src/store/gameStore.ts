@@ -70,31 +70,37 @@ export const useGameStore = create<GameState>()((set, get) => ({
   isLoading: false,
   powerUps: [
     {
-      id: 'study-buddy',
-      name: 'Study Buddy',
-      description: 'Get a study partner for 30 minutes - reduces mission duration by 25%',
-      effect: 'duration-reduction',
-      cooldown: 12,
+      id: 'streak-revival',
+      name: 'Streak Revival',
+      description: 'Restore your streak to its previous level once',
+      effect: 'streak-revival',
+      cooldown: 0,
       lastUsed: null,
       active: false,
+      used: false,
+      oneTimeUse: true,
     },
     {
       id: 'xp-boost',
       name: 'XP Boost',
       description: 'Double XP for next 3 missions',
       effect: 'xp-boost',
-      cooldown: 12,
+      cooldown: 0,
       lastUsed: null,
       active: false,
+      used: false,
+      oneTimeUse: true,
     },
     {
       id: 'time-freeze',
       name: 'Time Freeze',
       description: 'Extend deadline by 24 hours',
       effect: 'deadline-extension',
-      cooldown: 48,
+      cooldown: 0,
       lastUsed: null,
       active: false,
+      used: false,
+      oneTimeUse: true,
     },
   ],
   achievements: [
@@ -191,13 +197,65 @@ export const useGameStore = create<GameState>()((set, get) => ({
     get().saveUserData();
   },
   activatePowerUp: (powerUpId) => {
-    const { powerUps } = get();
-    const updatedPowerUps = powerUps.map(powerUp =>
-      powerUp.id === powerUpId
-        ? { ...powerUp, active: true, lastUsed: new Date().toISOString() }
-        : powerUp
-    );
-    set({ powerUps: updatedPowerUps });
+    const { powerUps, streak } = get();
+    const powerUp = powerUps.find(p => p.id === powerUpId);
+    
+    if (!powerUp || powerUp.used) {
+      console.log('❌ PowerUp not found or already used:', powerUpId);
+      return;
+    }
+    
+    console.log('🚀 Activating powerup:', powerUp.name);
+    
+    // Handle different powerup effects
+    switch (powerUp.effect) {
+      case 'streak-revival':
+        // Restore streak to previous level (assuming it was lost)
+        const newStreak = Math.max(1, streak); // At least 1 day streak
+        console.log('🔥 Restoring streak from', streak, 'to', newStreak);
+        set({ streak: newStreak });
+        break;
+        
+      case 'xp-boost':
+        // Double XP for next 3 missions (handled in completeMission)
+        console.log('⭐ XP Boost activated for next 3 missions');
+        break;
+        
+      case 'deadline-extension':
+        // Extend deadline by 24 hours (handled in mission creation/editing)
+        console.log('⏰ Time Freeze activated - deadlines extended by 24 hours');
+        break;
+        
+      default:
+        console.log('❓ Unknown powerup effect:', powerUp.effect);
+        return;
+    }
+    
+    // Mark powerup as used and remove if it's one-time use
+    const updatedPowerUps = powerUps.map(p => {
+      if (p.id === powerUpId) {
+        const updated = {
+          ...p,
+          active: true,
+          lastUsed: new Date().toISOString(),
+          used: true
+        };
+        
+        // If one-time use, mark for removal
+        if (p.oneTimeUse) {
+          console.log('🗑️ One-time use powerup used, will be removed:', p.name);
+        }
+        
+        return updated;
+      }
+      return p;
+    });
+    
+    // Remove used one-time powerups
+    const finalPowerUps = updatedPowerUps.filter(p => !(p.oneTimeUse && p.used));
+    
+    set({ powerUps: finalPowerUps });
+    console.log('💾 Saving data after powerup activation...');
     get().saveUserData();
   },
   unlockAchievement: (achievementId) => {

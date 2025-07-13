@@ -45,6 +45,8 @@ export interface PowerUp {
   cooldown: number; // in hours
   lastUsed: string | null;
   active: boolean;
+  used: boolean; // New field to track if powerup has been used
+  oneTimeUse: boolean; // New field to indicate if powerup disappears after use
 }
 
 export interface Achievement {
