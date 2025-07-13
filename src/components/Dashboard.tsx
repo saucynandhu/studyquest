@@ -61,7 +61,7 @@ export default function Dashboard() {
         className="text-center px-4"
       >
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
-          Welcome back, {userProfile?.displayName || user?.displayName || 'Scholar'}!
+          Welcome back, {userProfile?.username || user?.displayName || 'Scholar'}!
         </h1>
         <p className="text-gray-300 text-sm sm:text-base">Ready to conquer today's missions?</p>
         

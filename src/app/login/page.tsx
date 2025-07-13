@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, testFirebaseConnection } from '@/lib/firebase';
-import { createUserProfile } from '@/lib/firebase-utils';
+import { createUserProfile, getUserProfile } from '@/lib/firebase-utils';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
@@ -42,14 +42,17 @@ export default function LoginPage() {
       }
 
       if (isLogin) {
-        await signInWithEmailAndPassword(auth, email, password);
-        toast.success('Welcome back!');
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const userProfile = await getUserProfile(userCredential.user.uid);
+        toast.success(`Welcome back, ${userProfile?.username || 'User'}!`);
       } else {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         if (username) {
           await createUserProfile(userCredential.user, username);
+          toast.success(`Welcome to StudyQuest, ${username}!`);
+        } else {
+          toast.success('Account created successfully!');
         }
-        toast.success('Account created successfully!');
       }
       router.push('/');
     } catch (error: any) {
